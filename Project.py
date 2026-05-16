@@ -21,5 +21,7 @@ def main():
             st.session_state.model = model
             st.session_state.scaler = scaler
             st.session_state.accuracy = accuracy
+            db.enter_input_page()
+
 if __name__ == "__main__":
     main()
