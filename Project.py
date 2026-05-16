@@ -2,7 +2,7 @@ import streamlit as st
 import os
 import pandas as pd
 from sklearn.model_selection import train_test_split
-from database import train_perceptron, predict_perceptron, train_until_reach_accuracy, login_page
+import database as db
 # Hàm bổ trợ 
 def greeting_page():
     st.title("Chào mừng bạn đến với ứng dụng!")
@@ -34,7 +34,7 @@ def enter_input_page():
         if "model" in st.session_state and "scaler" in st.session_state:
             model = st.session_state.model
             scaler = st.session_state.scaler
-            prediction = predict_perceptron(model, scaler, input_array)
+            prediction = db.predict_perceptron(model, scaler, input_array)
             st.subheader("Kết quả chẩn đoán:")
             if prediction[0] == 1:
                 st.error("Cảnh báo: Có nguy cơ mắc bệnh (Positive)")
@@ -48,14 +48,14 @@ def enter_csv_page():
     return uploaded_file
 # Hàm chính
 def main():
-    login_page()
+    db.login_page()
     file_da_chon = enter_csv_page()
     if file_da_chon:
         df = pd.read_csv(file_da_chon)
         X = df.iloc[:, :-1].values
         y = df.iloc[:, -1].values
         X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42)
-        model, scaler, accuracy = train_until_reach_accuracy(X_train, y_train, X_test, y_test, target_accuracy=0.9)
+        model, scaler, accuracy = db.train_until_reach_accuracy(X_train, y_train, X_test, y_test, target_accuracy=0.9)
         st.session_state.model = model
         st.session_state.scaler = scaler
         st.session_state.accuracy = accuracy
