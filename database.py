@@ -78,7 +78,7 @@ def login_page():
             if st.button("Chưa có tài khoản?"):
                 st.session_state.auth_page = "register"
                 st.rerun()          
-        if st.button("Quên mật khẩu?", variant="secondary"):
+        if st.button("Quên mật khẩu?"):
             st.session_state.auth_page = "forgot_password"
             st.rerun()
     # MÀN HÌNH ĐĂNG KÝ
