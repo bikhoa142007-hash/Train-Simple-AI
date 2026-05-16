@@ -1,39 +1,9 @@
-from calendar import c
-
 import streamlit as st
 import os
 import pandas as pd
 from sklearn.model_selection import train_test_split
-from database import train_perceptron, predict_perceptron, train_until_reach_accuracy
-def load_users():
-    try:
-       if os.path.exists("users.txt"):
-           with open("users.txt", "r", encoding="utf-8") as f:
-               users = [line.strip() for line in f.readlines() if line.strip()]
-           return users
-       else:
-           st.error("File 'users.txt' không tồn tại")
-           return []
-    except Exception as e:
-        st.error(f"Đã xảy ra lỗi khi đọc file: {e}")
-        return []
-def login_page():
-    st.title("Đăng nhập")
-    # Input username
-    username = st.text_input("Tên đăng nhập: ")
-    if st.button("Đăng nhập"):
-        if username:
-            users =load_users()
-            if username in users:
-                st.session_state.logged_in = True
-                st.session_state.username = username
-                st.rerun()
-            else:
-                st.session_state.show_greeting = True
-                st.session_state.username = username
-                st.rerun()
-        else:
-            st.warning("Vui lòng nhập tên người dùng!")
+from database import train_perceptron, predict_perceptron, train_until_reach_accuracy, login_page
+# Hàm bổ trợ 
 def greeting_page():
     st.title("Chào mừng bạn đến với ứng dụng!")
     st.write(f"Xin chào, {st.session_state.username}! Bạn đã đăng nhập thành công.")
@@ -76,7 +46,9 @@ def enter_csv_page():
     st.title("Nhập dữ liệu từ file CSV")
     uploaded_file = st.file_uploader("Chọn file CSV", type=["csv"])
     return uploaded_file
+# Hàm chính
 def main():
+    login_page()
     file_da_chon = enter_csv_page()
     if file_da_chon:
         df = pd.read_csv(file_da_chon)
@@ -89,8 +61,6 @@ def main():
         st.session_state.accuracy = accuracy
         greeting_page()
         enter_input_page()
-    else:
-        login_page()
 if __name__ == "__main__":
     main()
 

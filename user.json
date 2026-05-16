@@ -1,0 +1,9 @@
+{
+    "users": [
+        {
+            "username": "admin",
+            "password": "hashed_password_here",
+            "email": "admin@example.com"
+        }
+    ]
+}
