@@ -71,6 +71,7 @@ def login_page():
                 if user:
                     st.session_state.logged_in_user = username
                     st.success(f"Xin chào {username}!")
+                    st.rerun()
                 else:
                     st.error("Sai tài khoản hoặc mật khẩu!")
         with col2:
