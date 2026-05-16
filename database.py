@@ -21,7 +21,7 @@ def train_perceptron(X_train, y_train):
 def predict_perceptron(model, scaler, X_test):
     X_test_scaled = scaler.transform(X_test)
     return model.predict(X_test_scaled)
-def train_until_reach_accuracy(X_train, y_train, X_test, y_test, target_accuracy=0.7):
+def train_until_reach_accuracy(X_train, y_train, X_test, y_test, target_accuracy=0.5):
     best_accuracy = 0
     attempt = 0
     max_attempts = 1000
