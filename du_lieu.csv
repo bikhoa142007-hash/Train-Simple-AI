@@ -1,4 +1,4 @@
-Gender,Age,Height,Weight,lumbar spine(L1-L4) - C?t s?ng th?t l?ng,BMD(Bone Mineral Density) - M?t ?? x??ng,T-score,Osteoporosis
+Gender,Age,Height,Weight,lumbar spine(L1-L4),BMD(Bone Mineral Density),T-score,Osteoporosis
 0,62,164,47,0.894,0.8793,-1.713,0
 1,55,162,54,1.333,0.79460001,-1.8,0
 0,44,160,54,1.157,0.90670002,-2.61,1
