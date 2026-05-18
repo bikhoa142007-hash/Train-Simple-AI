@@ -12,7 +12,7 @@ import seaborn as sns
 import json
 import os
 import hashlib
-# Hàm huấn luyện mô hình Perceptron
+# Hàm train
 def train_perceptron(X_train, y_train):
     scaler = StandardScaler()
     X_train_scaled = scaler.fit_transform(X_train)
@@ -32,14 +32,14 @@ def train_until_reach_accuracy(X_train, y_train, target_accuracy=0.85):
     X_tr, X_te, y_tr, y_te = train_test_split(X_train, y_train, test_size=0.2, random_state=42)    
     poly = PolynomialFeatures(degree=3, include_bias=False)
     X_tr_poly = poly.fit_transform(X_tr)
-    X_te_poly = poly.transform(X_te)
+    X_te_poly = poly.transform(X_te)  
     progress_text = st.empty()   
     for attempt in range(1, max_attempts + 1):
         current_seed = np.random.randint(0, 50000)
         current_eta0 = np.random.choice([0.001, 0.005, 0.01, 0.05, 0.1, 0.5, 1.0])       
         scaler = StandardScaler()
         X_tr_scaled = scaler.fit_transform(X_tr_poly)
-        X_te_scaled = scaler.transform(X_te_poly)       
+        X_te_scaled = scaler.transform(X_te_poly)             
         model = Perceptron(
             max_iter=2000, 
             eta0=current_eta0, 
@@ -49,21 +49,21 @@ def train_until_reach_accuracy(X_train, y_train, target_accuracy=0.85):
         )
         model.fit(X_tr_scaled, y_tr)   
         y_pred = model.predict(X_te_scaled)
-        current_accuracy = accuracy_score(y_te, y_pred)       
+        current_accuracy = accuracy_score(y_te, y_pred)          
         if current_accuracy > best_accuracy:
             best_accuracy = current_accuracy
             best_model = model
             best_scaler = scaler
-            best_poly = poly          
-        progress_text.text(f"Đang tìm giải pháp nâng cao... Lần {attempt}/{max_attempts} | Accuracy tốt nhất: {best_accuracy:.2f}")       
+            best_poly = poly                  
+        progress_text.text(f"Đang tìm giải pháp nâng cao... Lần {attempt}/{max_attempts} | Accuracy tốt nhất: {best_accuracy:.2f}")           
         if best_accuracy >= target_accuracy:
             break           
     if best_accuracy >= target_accuracy:
         progress_text.success(f"Xuất sắc! Đạt mục tiêu nâng cao: {best_accuracy:.2f}")
     else:
-        progress_text.warning(f"Đã quét tối ưu 1500 lần. Accuracy tối đa đạt được: {best_accuracy:.2f}")
+        progress_text.warning(f"Đã quét tối ưu 1500 lần. Accuracy tối đa đạt được: {best_accuracy:.2f}")        
     return best_model, best_scaler, best_poly, best_accuracy
-# Hàm bổ trợ app
+# Hàm nhập dữ liệu
 def enter_input_page():
     st.title("Nhập dữ liệu")
     Gender = st.selectbox("Giới tính", ["Nam", "Nữ"])
@@ -73,7 +73,7 @@ def enter_input_page():
     BMI = st.number_input("Chỉ số BMI", min_value=0.0)
     lumbar_spine = st.number_input("Đau lưng dưới", min_value=0.0)
     BMD = st.number_input("Mật độ xương", min_value=0.0)
-    T_score = st.number_input("T-score", min_value=-5.0, max_value=5.0)
+    T_score = st.number_input("T-score", min_value=-5.0, max_value=5.0)   
     if st.button("Chẩn đoán kết quả"):
         gender_val = 1 if Gender == "Nam" else 0
         input_data = [

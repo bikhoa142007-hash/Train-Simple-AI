@@ -27,5 +27,5 @@ def main():
     st.session_state.accuracy = accuracy
     st.write("Nhập thông tin bệnh nhân để dự đoán nguy cơ loãng xương:")
     db.enter_input_page()
-    if __name__ == "__main__":
-        main()
+if __name__ == "__main__":
+    main()
