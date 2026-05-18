@@ -89,7 +89,6 @@ def enter_input_page():
         Weight = st.number_input("Cân nặng (kg)", min_value=0.0, value=0.0)
         
     with col2:
-        BMI = st.number_input("Chỉ số BMI", min_value=0.0, value=0.0)
         lumbar_spine = st.number_input("Đau lưng dưới", min_value=0.0, value=0.0)
         BMD = st.number_input("Mật độ xương", min_value=0.0, value=0.0)
         T_score = st.number_input("T-score", min_value=-5.0, max_value=5.0, value=0.0)   
@@ -99,7 +98,7 @@ def enter_input_page():
         
         input_data = [
             gender_val, Age, Height, Weight, 
-            BMI, lumbar_spine, BMD, T_score
+            lumbar_spine, BMD, T_score
         ]
         input_array = [input_data]
         
