@@ -1,3 +1,4 @@
+from numpy import poly
 import streamlit as st
 import os
 import pandas as pd
@@ -17,9 +18,10 @@ def main():
             X = df.iloc[:, :-1].values
             y = df.iloc[:, -1].values
             X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
-            model, scaler, accuracy = db.train_until_reach_accuracy(X_train, y_train, target_accuracy=0.9)
+            model, scaler, poly, accuracy = db.train_until_reach_accuracy(X_train, y_train, target_accuracy=0.9)
             st.session_state.model = model
             st.session_state.scaler = scaler
+            st.session_state.poly = poly
             st.session_state.accuracy = accuracy
             db.enter_input_page()
 

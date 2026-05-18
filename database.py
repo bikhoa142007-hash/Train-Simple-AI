@@ -22,33 +22,46 @@ def train_perceptron(X_train, y_train):
 def predict_perceptron(model, scaler, X_test):
     X_test_scaled = scaler.transform(X_test)
     return model.predict(X_test_scaled)
-def train_until_reach_accuracy(X_train, y_train, target_accuracy=0.9):
+def train_until_reach_accuracy(X_train, y_train, target_accuracy=0.85):
     best_accuracy = 0
     best_model = None
     best_scaler = None
-    max_attempts = 1000 
-    X_tr, X_te, y_tr, y_te = train_test_split(X_train, y_train, test_size=0.2, random_state=42)
-    status_text = st.empty()
+    best_poly = None
+    max_attempts = 1500    
+    X_tr, X_te, y_tr, y_te = train_test_split(X_train, y_train, test_size=0.2, random_state=42)    
+    poly = PolynomialFeatures(degree=3, include_bias=False)
+    X_tr_poly = poly.fit_transform(X_tr)
+    X_te_poly = poly.transform(X_te)
+    progress_text = st.empty()   
     for attempt in range(1, max_attempts + 1):
-        current_seed = np.random.randint(0, 10000)
+        current_seed = np.random.randint(0, 50000)
+        current_eta0 = np.random.choice([0.001, 0.005, 0.01, 0.05, 0.1, 0.5, 1.0])       
         scaler = StandardScaler()
-        X_tr_scaled = scaler.fit_transform(X_tr)
-        X_te_scaled = scaler.transform(X_te)        
-        model = Perceptron(max_iter=1000, eta0=0.01, random_state=current_seed)
-        model.fit(X_tr_scaled, y_tr)       
+        X_tr_scaled = scaler.fit_transform(X_tr_poly)
+        X_te_scaled = scaler.transform(X_te_poly)       
+        model = Perceptron(
+            max_iter=2000, 
+            eta0=current_eta0, 
+            penalty='l2',
+            alpha=0.0001,
+            random_state=current_seed
+        )
+        model.fit(X_tr_scaled, y_tr)   
         y_pred = model.predict(X_te_scaled)
-        current_accuracy = accuracy_score(y_te, y_pred)      
+        current_accuracy = accuracy_score(y_te, y_pred)       
         if current_accuracy > best_accuracy:
             best_accuracy = current_accuracy
             best_model = model
             best_scaler = scaler
-        status_text.text(f"Đang thử lần {attempt}/{max_attempts}... Accuracy tốt nhất hiện tại: {best_accuracy:.2f}")       
+            best_poly = poly          
+        progress_text.text(f"Đang tìm giải pháp nâng cao... Lần {attempt}/{max_attempts} | Accuracy tốt nhất: {best_accuracy:.2f}")       
         if best_accuracy >= target_accuracy:
-            status_text.success(f"Đã đạt mục tiêu tại lần thứ {attempt}! Accuracy: {best_accuracy:.2f}")
-            break
+            break           
+    if best_accuracy >= target_accuracy:
+        progress_text.success(f"🎉 Xuất sắc! Đạt mục tiêu nâng cao: {best_accuracy:.2f}")
     else:
-        status_text.warning(f"Đã thử hết {max_attempts} lần. Accuracy cao nhất đạt được: {best_accuracy:.2f}")
-    return best_model, best_scaler, best_accuracy
+        progress_text.warning(f"⚡ Đã quét tối ưu 1500 lần. Accuracy tối đa đạt được: {best_accuracy:.2f}")
+    return best_model, best_scaler, best_poly, best_accuracy
 # Hàm lưu dữ USERNAME và PASSWORD vào file JSON
 DB_FILE = "users.json"
 def load_data():
