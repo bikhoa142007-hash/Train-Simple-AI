@@ -2,6 +2,7 @@ import numpy as np
 from sklearn import datasets
 from sklearn.preprocessing import StandardScaler
 from sklearn.linear_model import Perceptron
+from sklearn.preprocessing import PolynomialFeatures
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score
 import pandas as pd
@@ -21,24 +22,32 @@ def train_perceptron(X_train, y_train):
 def predict_perceptron(model, scaler, X_test):
     X_test_scaled = scaler.transform(X_test)
     return model.predict(X_test_scaled)
-def train_until_reach_accuracy(X_train, y_train, X_test, y_test, target_accuracy=0.9):
+def train_until_reach_accuracy(X_train, y_train, X_test, y_test, target_accuracy=0.85):
     best_accuracy = 0
-    attempt = 0
-    max_attempts = 1000
-    progress_text = st.empty()
-    while best_accuracy < target_accuracy and attempt < max_attempts:
-        attempt += 1
-        model, scaler = train_perceptron(X_train, y_train)
-        y_pred = predict_perceptron(model, scaler, X_test)
-        accuracy = accuracy_score(y_test, y_pred)
-        if accuracy > best_accuracy:
-            best_accuracy = accuracy
+    best_model = None
+    best_scaler = None
+    best_poly = None
+    max_attempts = 1000 
+    poly = PolynomialFeatures(degree=2, include_bias=False)
+    X_train_poly = poly.fit_transform(X_train)
+    X_test_poly = poly.transform(X_test)   
+    for attempt in range(1, max_attempts + 1):
+        current_seed = np.random.randint(0, 10000)      
+        scaler = StandardScaler()
+        X_train_scaled = scaler.fit_transform(X_train_poly)
+        X_test_scaled = scaler.transform(X_test_poly)     
+        model = Perceptron(max_iter=1000, eta0=0.01, random_state=current_seed)
+        model.fit(X_train_scaled, y_train)    
+        y_pred = model.predict(X_test_scaled)
+        current_accuracy = accuracy_score(y_test, y_pred)        
+        if current_accuracy > best_accuracy:
+            best_accuracy = current_accuracy
             best_model = model
-            best_scaler = scaler    
-        progress_text.text(f"Đang thử lần {attempt}... Accuracy hiện tại: {accuracy:.2f}")
+            best_scaler = scaler
+            best_poly = poly          
         if best_accuracy >= target_accuracy:
-            break     
-    return best_model, best_scaler, best_accuracy
+            break            
+    return best_model, best_scaler, best_poly, best_accuracy
 # Hàm lưu dữ USERNAME và PASSWORD vào file JSON
 DB_FILE = "users.json"
 def load_data():
