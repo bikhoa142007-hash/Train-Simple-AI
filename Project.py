@@ -16,7 +16,7 @@ def main():
             df = df.dropna()  
             X = df.iloc[:, :-1].values
             y = df.iloc[:, -1].values
-            X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42)
+            X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
             model, scaler, poly, accuracy = db.train_until_reach_accuracy(X_train, y_train, X_test, y_test, target_accuracy=0.9)
             st.session_state.model = model
             st.session_state.scaler = scaler
