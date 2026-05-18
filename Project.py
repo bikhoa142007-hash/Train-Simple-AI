@@ -3,9 +3,7 @@ import os
 import pandas as pd
 from sklearn.model_selection import train_test_split
 import database as db
-
-def main():
-    feature_cols = [
+feature_cols = [
         'Gender', 
         'Age', 
         'Height', 
@@ -13,9 +11,10 @@ def main():
         'lumbar spine(L1-L4)', 
         'BMD(Bone Mineral Density)', 
         'T-score'
-    ]
+]
+def main():
     st.title("Dự đoán bệnh loãng xương")
-    df = pd.read_csv("C:\\Users\\Khoa Bi\\source\\repos\\PROJECT\\du_lieu.csv")
+    df = pd.read_csv("du_lieu.csv")
     df = df.dropna()
     X = df[feature_cols]
     y = df['Osteoporosis'].values
