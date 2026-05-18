@@ -67,13 +67,7 @@ def train_until_reach_accuracy(X_train, y_train, target_accuracy=0.85):
         )           
         
         if best_accuracy >= target_accuracy:
-            break           
-            
-    if best_accuracy >= target_accuracy:
-        progress_text.success(f"Xuất sắc! Đạt mục tiêu nâng cao: {best_accuracy:.2f}")
-    else:
-        progress_text.warning(f"Đã quét tối ưu 1500 lần. Accuracy tối đa đạt được: {best_accuracy:.2f}")        
-        
+            break                 
     return best_model, best_scaler, best_poly, best_accuracy
 
 def enter_input_page():
