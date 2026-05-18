@@ -19,8 +19,9 @@ def train_perceptron(X_train, y_train):
     model = Perceptron(max_iter=5000, eta0=0.05, random_state=42)
     model.fit(X_train_scaled, y_train)
     return model, scaler
-def predict_perceptron(model, scaler, X_test):
-    X_test_scaled = scaler.transform(X_test)
+def predict_perceptron(model, scaler, poly, X_test):
+    X_test_poly = poly.transform(X_test)
+    X_test_scaled = scaler.transform(X_test_poly)
     return model.predict(X_test_scaled)
 def train_until_reach_accuracy(X_train, y_train, target_accuracy=0.85):
     best_accuracy = 0
@@ -76,14 +77,15 @@ def enter_input_page():
     if st.button("Chẩn đoán kết quả"):
         gender_val = 1 if Gender == "Nam" else 0
         input_data = [
-        gender_val, Age, Height, Weight, BMI, 
-        lumbar_spine, BMD, T_score
+            gender_val, Age, Height, Weight, 
+            lumbar_spine, BMD, T_score
         ]
-        input_array = [input_data] 
-        if "model" in st.session_state and "scaler" in st.session_state:
+        input_array = [input_data]
+        if "model" in st.session_state and "scaler" in st.session_state and "poly" in st.session_state:
             model = st.session_state.model
             scaler = st.session_state.scaler
-            prediction = predict_perceptron(model, scaler, input_array)
+            poly = st.session_state.poly
+            prediction = predict_perceptron(model, scaler, poly, input_array)
             st.subheader("Kết quả chẩn đoán:")
             if prediction[0] == 1:
                 st.error("Cảnh báo: Có nguy cơ mắc bệnh (Positive)")
