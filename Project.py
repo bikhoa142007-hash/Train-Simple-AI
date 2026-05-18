@@ -2,8 +2,7 @@ import streamlit as st
 import os
 import pandas as pd
 from sklearn.model_selection import train_test_split
-from . import database as db
-
+import database as db
 feature_cols = [
     'Gender', 
     'Age', 
